@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Đấu giá trực tuyến</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="index.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+        
+
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    
+    </head>
+
+    <body>
+        <header style="background-color: white; width: 100%" class="scroll-down-header">
+            <header class="header-container">
+                <div class="header-logo" >
+                    <a href="">
+                        <img alt="image" src="https://lacvietauction.vn/files/frontend/images/core/logo-dau-gia-lac-viet.png" style="width: 200.73px; height: 56.5px;">
+                    </a>
+                </div>
+                <div class="main-menu">
+                    <ul class="menu-list">
+                        <li class="menu-item-has-children">
+                            <a href="">Tài sản đấu giá <span class="arrow">▲</span></a>
+                            <ul class="submenu">
+                                <li><a href="">Tài sản nhà nước</a></li>
+                                <li><a href="">Bất động sản</a></li>
+                                <li><a href="">Phương tiện - xe cộ</a></li>
+                                <li><a href="">Sưu tầm - nghệ thuật</a></li>
+                            </ul>
+                        </li>
+                        
+                        <li class="menu-item-has-children">
+                            <a href="">Cuộc đấu giá <span class="arrow">▲</span></a>
+                            <ul class="submenu">
+                                <li>
+                                    <a href="">Cuộc đấu giá sắp đấu giá</a>
+                                </li>
+                                <li>
+                                    <a href="">Cuộc đấu giá đang diễn ra</a>
+                                </li>
+                                <li>
+                                    <a href="">Cuộc đấu giá đã kết thúc</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="menu-item-has-children">
+                            <a href="">Tin tức <span class="arrow">▲</span></a>
+                            <ul class="submenu">
+                                <li>
+                                    <a href="">Thông báo</a>
+                                </li>
+                                <li>
+                                    <a href="">Thông báo đấu giá</a>
+                                </li>
+                                <li>
+                                    <a href="">Tin khác</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="">Giới thiệu</a>
+                        </li>
+                        <li>
+                            <a href="">Liên hệ</a>
+                        </li>
+                    </ul>
+                </div>
+                <div id="server-time-clock" data-v-65fff26b="" aria-haspopup="true" class="wrapper-AtBcr u-isActionable u-textLeft u-inlineBlock u-borderNone u-textBold u-textNoWrap Arrange Arrange--middle u-userLauncherColor" data-time="1727859990800" >
+                   
+                        <div style="font-size: 30px; font-weight: bold;" id="time-part1"></div>
+                        <div  style="font-size: 18px;" id="date-part1"></div>
+                </div>
+                <div class="detail-button log" id="login" onclick="openModalLogin()" style="padding: 16px;position: relative;">
+                    <a id="login-text" style="font-size: 25px; text-decoration: none; align-items: center; color: white; font-weight: bold;font-family: Montserrat,sans-serif;" href="javascript:void(0)">Đăng Nhập</a>
+                    
+                    <div id="user-submenu" style="display: none;">
+                        <ul style="list-style-type: none; padding: 0;">
+                            <li> <i class="fas fa-user-circle"></i> <a href="Thongtin.html#ho-so">Thông tin cá nhân</a></li>
+                            <li> <i class="fas fa-history"></i> <a href="Thongtin.html#lich-su-dau-gia">Lịch sử đấu giá</a></li>
+                            <li> <i class="fas fa-sign-out-alt"></i> <a href="javascript:Logout();">Đăng xuất</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+            </header>
+        </header>
+        <div class="overlay" id="overlay" onclick="closeModalLogin()">
+            <div class="login-container" id="login-container" onclick="event.stopPropagation();">
+                <div class="close-button" id="close-button" onclick="closeModalLogin(event)">×</div>
+                <img alt="Company Logo" height="80" src="https://storage.googleapis.com/a1aa/image/FSnunffK7RlPzE9m8IkGiRiEhOAH6OQjQfvuVdEpOoMGbDSnA.jpg" width="80"/>
+                <h1>ĐẤU GIÁ LẠC VIỆT</h1>
+                <p>
+                    Bạn chưa có tài khoản? 
+                    <a href="#">Đăng Ký Ngay</a>
+                </p>
+                <form class="loginForm" id="loginForm">
+                    <label for="username">Tên đăng nhập / Email</label>
+                    <input id="username" placeholder="Nhập tên đăng nhập/Email" type="text" required />
+                    <label for="password">Mật khẩu</label>
+                    <input id="password" placeholder="Mật khẩu" type="password" required />
+                    <button type="submit" >ĐĂNG NHẬP</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- load trang sẽ giữ nguyên user nếu đã đăng nhập -->
+        <script>
+                document.addEventListener("DOMContentLoaded", function() {
+            // Kiểm tra trạng thái đăng nhập từ localStorage
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            const username = localStorage.getItem('username');
+
+            if (isLoggedIn && username) {
+                // Cập nhật nút đăng nhập với tên người dùng đã lưu
+                document.getElementById('login-text').innerHTML = `<i class="fas fa-user"></i> ${username}`;
+                document.getElementById('login').classList.add('logged-in');
+            } 
+            });
+        </script> 
+        
+
+       <!-- đăng xuất -->
+        <script>
+            function Logout() {
+                // Đảm bảo đóng overlay và form đăng nhập trước khi hiển thị Swal.fire
+                document.getElementById('overlay').style.display = 'none';
+                document.getElementById('login-container').classList.add('hidee');
+
+            Swal.fire({
+                title: 'Bạn có muốn đăng xuất?',
+                text: 'Lạc Việt Auction',
+                icon: 'question',
+                showCancelButton: true,
+                cancelButtonColor: '#443',
+                confirmButtonText: 'Xác nhận',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.value) {
+                    // localStorage.clear();
+                    localStorage.removeItem('isLoggedIn');
+                    localStorage.removeItem('username');
+                    window.location.href = "/home.html";
+                }
+            })
+        }
+        </script>
+        <script>
+            function checkLog(event) {
+                if ($('#username').val() == 'wallpom114' && $('#password').val() == 'go123123') {
+                    closeModalLogin();
+                    
+
+                     // Lưu trạng thái đăng nhập và tên người dùng vào localStorage
+                    localStorage.setItem('isLoggedIn', true);
+                    localStorage.setItem('username', 'wallpom114');
+
+                     // Thay đổi nội dung nút Đăng Nhập
+                    document.getElementById('login').onclick = null; // Xóa sự kiện mở modal
+                    document.getElementById('login-text').innerHTML = ' <i class="fas fa-user"></i> wallpom114'; // Đặt tên người dùng
+                    document.getElementById('login').classList.add('logged-in'); // Thêm lớp để cho phép hover
+                    // document.getElementById('user-submenu').style.display = 'block'; 
+                    // Hiển thị submenu
+
+                    Swal.fire({
+                        title: 'Đăng nhập thành công',
+                        text: 'Chào mừng bạn đến với chúng tôi',
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        
+                       
+                    });
+                }
+            }
+        
+            document.getElementById('loginForm').addEventListener('submit', function(event) {
+                event.preventDefault(); // Ngăn chặn hành động mặc định của form
+                checkLog(event); 
+            });
+        </script>
+        
+        <script>
+            function openModalLogin() {
+                var overlay = document.getElementById('overlay');
+                var loginContainer = document.getElementById('login-container');
+    
+                // Hiển thị overlay và form đăng nhập
+                overlay.style.display = 'flex';
+                loginContainer.classList.remove('hide'); // Đảm bảo form không có class 'hide' khi mở
+            }
+    
+            function closeModalLogin(event) {
+                 // Kiểm tra nếu event tồn tại để ngăn chặn sự kiện nổi bọt
+                if (event) {
+                    event.stopPropagation();
+                }
+    
+                var loginContainer = document.getElementById('login-container');
+                loginContainer.classList.add('hide'); // Thêm class để kích hoạt animation đóng
+    
+                // Đợi animation đóng xong trước khi ẩn hoàn toàn overlay
+                setTimeout(function() {
+                    document.getElementById('overlay').style.display = 'none';
+                }, 240); // Delay tương ứng với thời gian của animation (0.5s)
+            }
+    
+            // Đảm bảo nút "×" hoạt động chính xác
+            document.getElementById('close-button').addEventListener('click', function(event) {
+                closeModalLogin(event); // Gọi hàm đóng cửa sổ khi nhấp vào dấu "×"
+            });
+    
+             // Đóng modal khi nhấn ra ngoài form
+             document.getElementById('overlay').addEventListener('click', function(event) {
+                closeModalLogin(event);
+            });
+        </script>
+            <script>
+                function updateTimeAndDate() {
+                const timeElement = document.getElementById('time-part1');
+                const dateElement = document.getElementById('date-part1');
+    
+                    // Lấy thời gian hiện tại ở múi giờ Việt Nam (Asia/Ho_Chi_Minh)
+                    const vietnamTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Ho_Chi_Minh" });
+                    const currentDate = new Date(vietnamTime);
+            
+                    // Định dạng giờ phút giây
+                    const hours = String(currentDate.getHours()).padStart(2, '0');
+                    const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+                    const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+            
+                    timeElement.textContent = `${hours}:${minutes}:${seconds}`;
+            
+                // Định dạng ngày tháng
+                const days = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
+                const dayOfWeek = days[currentDate.getDay()];
+                const day = currentDate.getDate();
+                const month = currentDate.getMonth() + 1; // Tháng bắt đầu từ 0
+                const year = currentDate.getFullYear();
+            
+                dateElement.textContent = `${dayOfWeek}, ${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}/${year}`;
+            }
+    
+                // Cập nhật mỗi giây
+                setInterval(updateTimeAndDate, 1000);
+            
+                // Gọi hàm ngay khi tải trang
+                updateTimeAndDate();
+    
+            </script>   
+    
+
+        <!-- Phần giữa -->
+        <div class="hero-area ">
+            
+            <div style="width: 600px;" class="content-container">
+                
+                <span  class="welcome-text" style="visibility: visible; font-size: 30px; color: #b41712;">
+                    Chào mừng bạn đến với Lạc Việt Auction
+                </span>
+                <h1 class="main-title" style="visibility: visible; font-size: 35px;">
+                    Nền tảng đấu giá trực tuyến hàng đầu Việt Nam
+                </h1>
+                <p class="description" style="visibility: visible;  font-size: 30px;">
+                    Tự hào là một trong những nhà đấu giá lớn nhất tại Việt Nam, Lạc Việt luôn là đơn vị tiên phong ứng dụng công nghệ thông tin vào hoạt động đấu giá. Ngày 17/07/2020, Lạc Việt vinh dự tổ chức thành công cuộc đấu giá trực tuyến chính thống đầu tiên tại Việt Nam, mở ra 1 chương mới cho hoạt động đấu giá nước nhà.
+                </p>
+                
+            </div>
+        
+            <div class="im">
+                <img alt="image" src="https://data.lvo.vn/media/upload/1001768/photo_2024-04-03_16-02-36 0304.jpg" class="home3-banner img-fluid">
+            </div>
+        </div>
+
+
+        <!-- Phần cuối -->
+        <div class="custom-container">
+            <div class="row">
+                <div class="col">
+                    <div class="section-title4">
+                        <h2>
+                            Tài sản sắp được đấu giá
+                        </h2>
+                    </div>
+                </div>
+            </div>
+            <div class="auction-wrapper" style="display: block;">
+               
+    
+                <!-- Auction grid -->
+                <div class="auction-grid">
+                    <div class="auction-grid-inner">
+                        <!-- Cards -->
+                        <div class="auction-card">
+                            <div class="auction-info">Thời gian đấu giá</div>
+                            <div class="auction-time">07/10/2024 14:00:00</div>
+                            <div class="auction-thumb">
+                                <a href="/"><img src="image/4.jpg" alt="car"></a>
+                              
+                            </div>
+                            <div class="auction-description">
+                                Cho thuê phục vụ hoạt động phụ trợ: Cung cấp dịch vụ trông giữ xe cho học sinh tại Trường THCS THPT Thới Quản
+                            </div>
+                            <div class="auction-price">Giá khởi điểm: 2.000.000 VNĐ</div>
+                            <div class="auction-actions">
+                                <button class="detail-button">Chi Tiết</button>
+                                <a href="taisandaugia.html">chi tiết</a>
+                                <i class="share-icon fas fa-share-alt"></i>
+                            </div>
+                        </div>
+                        <div class="auction-card">
+                            <div class="auction-info">Thời gian đấu giá</div>
+                            <div class="auction-time">07/10/2024 15:00:00</div>
+                            <!-- <img src="https://placehold.co/600x400" alt="Image"> -->
+                            <div class="auction-thumb">
+                                <a href="/"><img src="https://pixner.net/sbidu/main/assets/images/auction/product/02.png" alt="car"></a>
+                              
+                            </div>
+                            <div class="auction-description">
+                                Lô xe mô tô, xe gắn máy các loại gồm 118 chiếc đủ điều kiện lưu hành và 42 chiếc không đủ điều kiện lưu hành
+                            </div>
+                            <div class="auction-price">Giá khởi điểm: 214.550.000 VNĐ</div>
+                            <div class="auction-actions">
+                                <button class="detail-button">Chi Tiết</button>
+                                <i class="share-icon fas fa-share-alt"></i>
+                            </div>
+                        </div>
+                        <div class="auction-card">
+                            <div class="auction-info">Thời gian đấu giá</div>
+                            <div class="auction-time">07/10/2024 16:00:00</div>
+                            <!-- <img src="https://placehold.co/600x400" alt="Image"> -->
+                            <div class="auction-thumb">
+                                <a href="/"><img src="https://pixner.net/sbidu/main/assets/images/auction/product/06.png" alt="car"></a>
+                              
+                            </div>
+                            <div class="auction-description">
+                                Dự án xây dựng...
+                            </div>
+                            <div class="auction-price">Giá khởi điểm: 1.500.000 VNĐ</div>
+                            <div class="auction-actions">
+                                <button class="detail-button">Chi Tiết</button>
+                                <i class="share-icon fas fa-share-alt"></i>
+                            </div>
+                        </div>
+                        <div class="auction-card">
+                            <div class="auction-info">Thời gian đấu giá</div>
+                            <div class="auction-time">07/10/2024 17:00:00</div>
+                            <!-- <img src="https://placehold.co/600x400" alt="Image"> -->
+                            <div class="auction-thumb">
+                                <a href="/"><img src="https://pixner.net/sbidu/main/assets/images/auction/product/04.png" alt="car"></a>
+                              
+                            </div>
+                            <div class="auction-description">
+                                Đấu giá đất đai khu vực...
+                            </div>
+                            <div class="auction-price">Giá khởi điểm: 5.000.000 VNĐ</div>
+                            <div class="auction-actions">
+                                <button class="detail-button">Chi Tiết</button>
+                                <i class="share-icon fas fa-share-alt"></i>
+                            </div>
+                        </div>
+                        <!-- giả sử nhiều card -->
+                        <div class="auction-card">
+                            <div class="auction-info">Thời gian đấu giá</div>
+                            <div class="auction-time">07/10/2024 17:00:00</div>
+                            <img src="https://placehold.co/600x400" alt="Image">
+                            <div class="auction-description">
+                                Đấu giá đất đai khu vực...
+                            </div>
+                            <div class="auction-price">Giá khởi điểm: 5.000.000 VNĐ</div>
+                            <div class="auction-actions">
+                                <button class="detail-button">Chi Tiết</button>
+                                <i class="share-icon fas fa-share-alt"></i>
+                            </div>
+                        </div>
+                        <div class="auction-card">
+                            <div class="auction-info">Thời gian đấu giá</div>
+                            <div class="auction-time">07/10/2024 17:00:00</div>
+                            <img src="https://placehold.co/600x400" alt="Image">
+                            <div class="auction-description">
+                                Đấu giá đất đai khu vực...
+                            </div>
+                            <div class="auction-price">Giá khởi điểm: 5.000.000 VNĐ</div>
+                            <div class="auction-actions">
+                                <button class="detail-button">Chi Tiết</button>
+                                <i class="share-icon fas fa-share-alt"></i>
+                            </div>
+                        </div>
+                        <div class="auction-card">
+                            <div class="auction-info">Thời gian đấu giá</div>
+                            <div class="auction-time">07/10/2024 17:00:00</div>
+                            <img src="https://placehold.co/600x400" alt="Image">
+                            <div class="auction-description">
+                                Đấu giá đất đai khu vực...
+                            </div>
+                            <div class="auction-price">Giá khởi điểm: 5.000.000 VNĐ</div>
+                            <div class="auction-actions">
+                                <button class="detail-button">Chi Tiết</button>
+                                <i class="share-icon fas fa-share-alt"></i>
+                            </div>
+                        </div>
+                        <div class="auction-card">
+                            <div class="auction-info">Thời gian đấu giá</div>
+                            <div class="auction-time">07/10/2024 17:00:00</div>
+                            <img src="https://placehold.co/600x400" alt="Image">
+                            <div class="auction-description">
+                                Đấu giá đất đai khu vực...
+                            </div>
+                            <div class="auction-price">Giá khởi điểm: 5.000.000 VNĐ</div>
+                            <div class="auction-actions">
+                                <button class="detail-button">Chi Tiết</button>
+                                <i class="share-icon fas fa-share-alt"></i>
+                            </div>
+                        </div>
+                        <div class="auction-card">
+                            <div class="auction-info">Thời gian đấu giá</div>
+                            <div class="auction-time">07/10/2024 17:00:00</div>
+                            <img src="https://placehold.co/600x400" alt="Image">
+                            <div class="auction-description">
+                                Đấu giá đất đai khu vực...
+                            </div>
+                            <div class="auction-price">Giá khởi điểm: 5.000.000 VNĐ</div>
+                            <div class="auction-actions">
+                                <button class="detail-button">Chi Tiết</button>
+                                <i class="share-icon fas fa-share-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div style="margin: 80px 0; display: flex;
+                align-items: center;">
+                    <div class="line" style=" margin-right: 200px; margin-left: 260px;"></div>
+                    <div class="line" style="margin-left: 200px;"></div>
+                    <div class="buttons" style="margin-left: 160px;">
+                        <div class="button left-arrow">
+                            <i class="fas fa-arrow-left left-arrow"></i>
+                        </div>
+                        <div class="button right-arrow">
+                            <i class="fas fa-arrow-right right-arrow"></i>
+                        </div>
+                </div>
+               
+            </div>
+        </div>
+        <script>
+            const gridInner = document.querySelector('.auction-grid-inner');
+            const leftArrow = document.querySelector('.left-arrow');
+            const rightArrow = document.querySelector('.right-arrow');
+            let currentPosition = 0;
+            const cardWidth = 375 + 60 ; // 250px width + 60px margin (10px on each side)
+            const maxCardsVisible = 4;
+            const totalCards = gridInner.children.length;
+            
+            function updateGridPosition() {
+                gridInner.style.transform = `translateX(${-currentPosition * cardWidth}px)`;
+            }
+    
+            rightArrow.addEventListener('click', () => {
+                if (currentPosition < totalCards - maxCardsVisible) {
+                    currentPosition++;
+                    updateGridPosition();
+                }
+            });
+    
+            leftArrow.addEventListener('click', () => {
+                if (currentPosition > 0) {
+                    currentPosition--;
+                    updateGridPosition();
+                }
+            });
+        </script>
+
+
+<div class="container">
+    <div class="section-title4">
+        <h2>Khách hàng &amp; đối tác tiêu biểu</h2>
+    </div>
+    <div class="logos">
+        <!-- Page 1 logos -->
+        <div class="logo page1"><img alt="EVN" src="image/VAMC.png" style="height: 55px;scale: 1.5;"></div>
+        <div class="logo page1"><img alt="HQVN" src="image/VTB.png" style="height: 55px;scale: 1.75;"></div>
+        <div class="logo page1"><img alt="HUD" src="image/VPB.png" style="height: 55px;scale: 1.75;"></div>
+        <div class="logo page1"><img alt="QLTT" src="image/VIB.png" style="height: 65px;scale: 1.5;"></div>
+        <div class="logo page1"><img alt="SHB" src="image/SHB.png" style="height: 65px;scale: 1.5;"></div>
+        <div class="logo page1"><img alt="SS" src="image/HUD.png" style="height: 65px;scale: 1.5;"></div>
+        <div class="logo page1"><img alt="VNPT" src="image/VNPT.png" style="height: 65px;scale: 1.5;"></div>
+        <div class="logo page1"><img alt="TVH" src="image/EVN.svg" style="height: 65px;scale: 1.5;"></div>
+        <div class="logo page1"><img alt="Vietnam Customs" src="image/HQVN.png" style="height: 85px;scale: 1.15;"></div>
+        <div class="logo page1"><img alt="Samsung" src="image/TNN.png" style="height: 85px;scale: 1.15;"></div>
+        <div class="logo page1"><img alt="SHB" src="image/QLTT.png" style="height: 85px;scale: 1.15;"></div>
+        <div class="logo page1"><img alt="EVN" src="image/SS.png" style="height: 45px;scale: 1.15;"></div>
+
+        <!-- Page 2 logos -->
+        <div class="logo page2"><img alt="VAMC" src="image/VTB.png" style="height: 55px;scale: 1.75;"></div>
+        <div class="logo page2"><img alt="VietinBank" src="image/VPB.png" style="height: 55px;scale: 1.75;"></div>
+        <div class="logo page2"><img alt="VPBank" src="image/VIB.png" style="height: 65px;scale: 1.5;"></div>
+        <div class="logo page2"><img alt="VIB" src="image/SHB.png" style="height: 65px;scale: 1.5;"></div>
+        <div class="logo page2"><img alt="VNPT" src="image/HUD.png" style="height: 65px;scale: 1.5;"></div>
+        <div class="logo page2"><img alt="Vietnam Customs" src="image/THADS.png" style="height: 85px;scale: 1.15;"></div>
+        <div class="logo page2"><img alt="EVN" src="image/EVN.svg" style="height: 65px;scale: 1.5;"></div>
+        <div class="logo page2"><img alt="SS" src="image/HQVN.png" style="height: 85px;scale: 1.15;"></div>
+        <div class="logo page2"><img alt="THADS" src="image/TNN.png" style="height: 85px;scale: 1.15;"></div>
+        <div class="logo page2"><img alt="HUD" src="image/QLTT.png" style="height: 85px;scale: 1.15;"></div>
+        <div class="logo page2"><img alt="QLTT" src="image/SS.png" style="height: 45px;scale: 1.15;"></div>
+        <div class="logo page2"><img alt="SHB" src="image/TVH.png" style="height: 75px;scale: 1.5;"></div>
+    </div>
+    <div class="pagination">
+        <button onclick="showPage(1)" id="page1-btn"  disabled></button>
+        <button onclick="showPage(2)" id="page2-btn"></button>
+    </div>
+</div>
+
+<script>
+    function showPage(page) {
+        // Hide all logos with fade out effect
+        document.querySelectorAll('.logo').forEach(logo => {
+            logo.classList.remove('show'); // Remove the show class for fade out
+            setTimeout(() => {
+                logo.style.display = 'none'; // Set display to none after fade out
+            }, 500); // Match this duration with CSS transition duration
+        });
+        
+        // Show only the selected page logos
+        setTimeout(() => {
+            document.querySelectorAll('.page' + page).forEach(logo => {
+                logo.style.display = 'flex'; // Set display to flex
+                setTimeout(() => {
+                    logo.classList.add('show'); // Add the show class for fade in
+                }, 20); // Small timeout to ensure the display is set before adding the class
+            });
+        }, 500); // Wait for fade out to complete before showing new logos
+        
+        // Update pagination button states
+        document.getElementById('page1-btn').disabled = (page === 1);
+        document.getElementById('page2-btn').disabled = (page === 2);
+    }
+
+    // Initialize by showing the first page
+    showPage(1);
+</script>
+    </body>
+</html>
